@@ -1,6 +1,7 @@
 from  flask import render_template, flash,redirect,url_for
-from  noteFiles import app
+from  noteFiles import app,db,bcrypt
 from  noteFiles.forms import RegistrationForm ,LogInForm
+from noteFiles.models import User,Notes
 
 
 @app.route('/')
@@ -21,7 +22,11 @@ def account():
 @app.route('/register',methods=['GET','POST'])
 def register():
     form = RegistrationForm()
-    if form.validate_on_submit():
+    if form.validate_on_submit(): 
+        hashedPassword=bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data,email=form.email.data,password=hashedPassword)
+        db.session.add(user)
+        db.session.commit()
         print('validated')
         flash(f'Account created successfully for {form.username.data}!', 'success')
         return redirect(url_for('home'))
@@ -34,10 +39,9 @@ def register():
 def login():
     form = LogInForm()
     if form.validate_on_submit():
-        if form.email.data == 'aman.getnet2@gmail.com' and form.password.data =='password':
-            flash(f'{form.email.data} logged in successfully','success')
-            return redirect(url_for('home'))
-        else:
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password,form.password.data):
+
             flash(f'login unsuccessfull, try again','danger')
 
     return render_template('login.html',title="login",form=form)
