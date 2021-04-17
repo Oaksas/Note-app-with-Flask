@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+ <div class="container-fluid mt-100">
+     <div class="row">
+         <div class="col-md-12">
+             <div class="card mb-4">
+                 <div class="card-header">
+                     <div class="media flex-wrap w-100 align-items-center"> <img src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1574583246/AAA/2.jpg" class="d-block ui-w-40 rounded-circle" alt="">
+                         <div class="media-body ml-3"> <a href="javascript:void(0)" data-abc="true">{{post.author.username}}</a>        <small class="text-muted">{{post.datePosted.strftime('%Y-%m-%d')}}</small>
+                         </div>
+                     </div>
+                 </div>
+                 {% if post.author == current_user %}
+                 <div>
+                   <a href="{{url_for('updatePost', post_id=post.id)}}" class="btn btn-secondary btn-sm m-1" >Update</a>
+                   <button type="button"  class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                 </div>
+                 {% endif %}
+                 
+                 <div class="card-body">
+                  <p class="text-warning"> {{post.title}} </p>
+
+                     <p> {{post.content}} </p>
+               
+                 </div>
+               
+             </div>
+         </div>
+     </div>
+ </div>
+ <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Sure want to delete this post ?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" >&times;</span>
+        </button>
+      </div>
+   
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <form action="{{url_for('deletePost',post_id=post.id)}}" method="post">
+
+      <input class ="btn btn-danger" type="submit" value="Delete">
+    </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}

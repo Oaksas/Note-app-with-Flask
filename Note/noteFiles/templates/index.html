@@ -1,5 +1,40 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+{% for post in posts.items %}
+ <div class="container-fluid mt-10">
+     <div class="row">
+         <div class="col-md-12">
+             <div class="card mb-4">
+                 <div class="card-header">
+                     <div class="media flex-wrap w-100 align-items-center"> <img src="{{ url_for('static', filename='images/'+ post.author.image_file) }}"  class="d-block ui-w-40 rounded-circle" alt="">
+                         <div class="media-body ml-3"> <a href="javascript:void(0)" data-abc="true">{{post.author.username}}</a>        <small class="text-muted">{{post.datePosted.strftime('%Y-%m-%d')}}</small>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="card-body">
+                   <a href="{{url_for('post',post_id=post.id)}}" class="text-warning h5">{{post.title}}</a>
+                     <p> {{post.content}} </p>
+               
+                 </div>
+               
+             </div>
+         </div>
+     </div>
+ </div>
 
+
+{% endfor %}
+{% for numPage in posts.iter_pages() %}
+{% if numPage %}
+{% if numPage == posts.page %}
+<a class ="btn btn-secondary mb-4 " href=" {{ url_for('home', page=numPage) }}">{{ numPage }}</a>
+{% else %}
+<a class ="btn btn-outline-info mb-4 text-primary" href=" {{ url_for('home', page=numPage) }}">{{ numPage }}</a>
+
+{% endif %}
+{% else %}
+...
+{% endif %}
+{% endfor %}
 {% endblock content %}

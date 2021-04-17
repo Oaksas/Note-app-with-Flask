@@ -9,6 +9,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost/no
 db =SQLAlchemy(app)
 bcrypt=Bcrypt(app)
 login_manager=LoginManager(app)
+login_manager.login_view='login'
+login_manager.login_message_category='info'
 from noteFiles.models import User,Notes
 from  noteFiles.forms import RegistrationForm 
 
